@@ -3,6 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
 import { imageUpoad } from "../../api/utilits";
 import useAuth from "../../hooks/useAuth";
+import { saveUserDB } from "../../api/auth";
 
 const SignUp = () => {
   const {
@@ -21,6 +22,8 @@ const SignUp = () => {
       const imageData = await imageUpoad(image);
       const result = await createUser(email, password);
       await updateUserProfile(name, imageData?.data?.display_url)
+      const dbResponse = await saveUserDB(result?.user);
+      console.log(dbResponse);
     }catch(err){
       console.log(err);
     }
