@@ -5,7 +5,7 @@ import Loader from "../../components/Shared/Loader";
 import { Helmet } from "react-helmet-async";
 import Header from "../../components/RoomDetails/Header";
 import RoomInfo from "../../components/RoomDetails/RoomInfo/RoomInfo";
-import Calender from "../../components/RoomDetails/Calender";
+import RoomReserverd from "../../components/RoomDetails/RoomReserverd";
 
 const RoomsDetails = () => {
   const { id } = useParams();
@@ -14,7 +14,7 @@ const RoomsDetails = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch("/rooms.json")
+    fetch("https://raw.githubusercontent.com/shakilahmedatik/stay-vista-part2/main/client/public/rooms.json")
       .then((res) => res.json())
       .then((data) => {
         const signleRoom = data.find((room) => room._id === id);
@@ -38,7 +38,7 @@ const RoomsDetails = () => {
           <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-8">
             <RoomInfo room={room} />
             <div className="md:col-span-3 order-first md:order-last mb-10">
-              <Calender />
+                <RoomReserverd room={room}/>
             </div>
           </div>
         </div>
