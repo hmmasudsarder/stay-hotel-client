@@ -18,6 +18,7 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan('dev'))
+
 const verifyToken = async (req, res, next) => {
   const token = req.cookies?.token
   console.log(token)
@@ -34,15 +35,22 @@ const verifyToken = async (req, res, next) => {
   })
 }
 
-const client = new MongoClient(process.env.DB_URI, {
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.suyjuyq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  },
-})
+  }
+});
+
 async function run() {
   try {
+    const usersCollection = client.db('stayVistaDB').collection('users');
+    await client.db('admin').command({ ping: 1 })
+    console.log(
+      'Pinged your deployment. You successfully connected to MongoDB!'
+    )
     // auth related api
     app.post('/jwt', async (req, res) => {
       const user = req.body
@@ -95,10 +103,7 @@ async function run() {
     })
 
     // Send a ping to confirm a successful connection
-    await client.db('admin').command({ ping: 1 })
-    console.log(
-      'Pinged your deployment. You successfully connected to MongoDB!'
-    )
+
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
